@@ -1,13 +1,12 @@
-
-import express from "express";
-import bodyParser from "body-parser";
-import dotenv from "dotenv";
-import chatbotRouter from "./routes/chatbot.js"
-import recipesRouter from "./routes/recipes.js"
+import express from 'express';
+import bodyParser from 'body-parser';
+import dotenv from 'dotenv';
+import chatbotRouter from './routes/chatbot.js';
+import recipesRouter from './routes/recipes.js';
 dotenv.config(); // load .env file
 
-import admin from "firebase-admin";
-const serviceAccount = await import("./permissions.json", {with : { type: "json" } });
+import admin from 'firebase-admin';
+const serviceAccount = await import('./permissions.json', { with: { type: 'json' } });
 
 const app = express();
 const port = 5001;
@@ -22,10 +21,9 @@ admin.initializeApp({
 
 export const db = admin.firestore();
 
-
 app.use(bodyParser.json());
-app.use("/chat", chatbotRouter);
-app.use("/recipes", recipesRouter);
+app.use('/chat', chatbotRouter);
+app.use('/recipes', recipesRouter);
 
 app.listen(port, () => {
 	console.log(`Server is running on http://localhost:${port}`);

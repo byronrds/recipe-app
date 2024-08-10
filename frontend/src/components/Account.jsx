@@ -1,15 +1,15 @@
-import React, { useContext, useState, useEffect } from "react";
-import { AriaNav } from "./AriaNav";
-import { AuthContext } from "./AuthContext";
-import { Navigate } from "react-router-dom";
-import { getDocs, collection } from "firebase/firestore";
-import { db } from "../../firebase";
-import { FavoriteCard } from "./FavoriteCard";
+import React, { useContext, useState, useEffect } from 'react';
+import { AriaNavbar } from './AriaNavbar';
+import { AuthContext } from './AuthContext';
+import { Navigate } from 'react-router-dom';
+import { getDocs, collection } from 'firebase/firestore';
+import { db } from '../../firebase';
+import { FavoriteCard } from './FavoriteCard';
 
 export const Account = () => {
-	const user = localStorage.getItem("user");
+	const user = localStorage.getItem('user');
 	if (user === null) {
-		return <Navigate to="/login" replace />;
+		return <Navigate to='/login' replace />;
 	}
 	const userJson = JSON.parse(user);
 	const email = userJson.email;
@@ -45,12 +45,12 @@ export const Account = () => {
 	// 		console.error("Error fetching the recipes:", error);
 	// 	}
 	// };
-	const app_id = "b24f5f1f"; // Replace with your app_id
-	const app_key = "3c26a1c7d5ecaec7afac077c2fc3e348"; // Replace with your app_key
+	const app_id = 'b24f5f1f'; // Replace with your app_id
+	const app_key = '3c26a1c7d5ecaec7afac077c2fc3e348'; // Replace with your app_key
 
 	const extractRecipeId = (uri) => {
 		// Split the string by '#recipe_' and take the last part
-		const parts = uri.split("#recipe_");
+		const parts = uri.split('#recipe_');
 		return parts.pop(); // This will return the part after '#recipe_'
 	};
 
@@ -65,17 +65,17 @@ export const Account = () => {
 				console.log(`Fetching recipe with ID: ${recipeId} from URL: ${url}`);
 				const response = await fetch(url);
 				const data = await response.json();
-				console.log("Fetched data -> ", data);
+				console.log('Fetched data -> ', data);
 				if (data.recipe) {
 					arrWithAllEdamamSaved.push(data.recipe);
 				} else {
 					console.warn(`No recipe found for ID: ${recipeId}`);
 				}
 			} catch (error) {
-				console.error("Error fetching the recipes:", error);
+				console.error('Error fetching the recipes:', error);
 			}
 		}
-		console.log("The Array being set: ", arrWithAllEdamamSaved);
+		console.log('The Array being set: ', arrWithAllEdamamSaved);
 		setEdamamAllFields(arrWithAllEdamamSaved);
 	};
 
@@ -100,8 +100,8 @@ export const Account = () => {
 			callEdamamAPIUsingID(edamamArr);
 		}
 
-		console.log("edamamArr: ", edamamArr);
-		console.log("userArr: ", userArr);
+		console.log('edamamArr: ', edamamArr);
+		console.log('userArr: ', userArr);
 		setSavedEdamamRecipes(edamamArr);
 		setSavedUserRecipes(userArr);
 	};
@@ -112,15 +112,15 @@ export const Account = () => {
 
 	return (
 		<div>
-			<AriaNav />
+			<AriaNavbar />
 			<h1>Account</h1>
 			<p>Here is your information: </p>
 			<p>Email: {email}</p>
 			<div>
 				<button onClick={() => logoutUser()}>Logout</button>
 			</div>
-			<div className="saved-recipes-container">
-				<div className="single-container">
+			<div className='saved-recipes-container'>
+				<div className='single-container'>
 					<h1>Saved Recipes (From Edamam)</h1>
 
 					{edamamAllFields.length > 0 ? (
@@ -133,7 +133,7 @@ export const Account = () => {
 									ingredientLines={item.ingredientLines}
 									source={item.source}
 									label={item.label}
-									uri="not-applicable"
+									uri='not-applicable'
 									fromEdamam={true}
 								/>
 							</div>
@@ -143,7 +143,7 @@ export const Account = () => {
 					)}
 				</div>
 
-				<div className="single-container">
+				<div className='single-container'>
 					<h1>Saved Recipes (From Users)</h1>
 					{savedUserRecipes.length > 0 ? (
 						savedUserRecipes.map((item, index) => (
@@ -155,7 +155,7 @@ export const Account = () => {
 									ingredientLines={item.ingredientLines}
 									source={item.source}
 									label={item.label}
-									uri="not-applicable"
+									uri='not-applicable'
 									fromEdamam={true}
 								/>
 							</div>

@@ -1,10 +1,10 @@
-import React from "react";
-import { AriaNav } from "./AriaNav";
+import React from 'react';
+import { AriaNavbar } from './AriaNavbar';
 
 export const Admin = () => {
 	return (
 		<div>
-			<AriaNav />
+			<AriaNavbar />
 			<h1>Admin (special priveleges)</h1>
 		</div>
 	);

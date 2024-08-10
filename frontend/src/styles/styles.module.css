@@ -1,0 +1,18 @@
+.flexbox {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 2rem;
+}
+
+.foodpic {
+	opacity: 50;
+}
+
+.foodpic:hover {
+	opacity: 100;
+	cursor: pointer;
+}
+
+.clickbox:hover {
+	cursor: pointer;
+}

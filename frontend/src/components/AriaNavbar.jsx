@@ -2,7 +2,8 @@ import React, { useContext } from 'react';
 import { TabNav, Flex } from '@radix-ui/themes';
 import { useLocation, Link, Navigate } from 'react-router-dom';
 import { AuthContext } from './AuthContext';
-export const AriaNav = () => {
+
+export const AriaNavbar = () => {
 	const location = useLocation();
 	const { pathname } = location;
 	const { logoutUser } = useContext(AuthContext);

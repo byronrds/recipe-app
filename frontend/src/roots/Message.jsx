@@ -1,9 +1,9 @@
-import React from "react";
-import { AriaNav } from "../components/AriaNav";
+import React from 'react';
+import { AriaNavbar } from '../components/AriaNavbar';
 export const Message = () => {
 	return (
 		<div>
-			<AriaNav />
+			<AriaNavbar />
 			<h1>Message</h1>
 		</div>
 	);
