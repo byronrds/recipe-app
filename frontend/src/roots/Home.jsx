@@ -60,7 +60,7 @@ export const Home = () => {
 			<div className={styles.flexbox}>
 				{filteredRecipes.map((item, index) => (
 					<Box
-						onClick={() => handleRecipeClick(item.recipeID, item)}
+						onClick={() => handleRecipeClick(item.id, item)}
 						key={index}
 						className={styles.clickbox}
 						width='300px'>
