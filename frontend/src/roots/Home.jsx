@@ -4,27 +4,36 @@ import axios from 'axios';
 import styles from '../styles/styles.module.css';
 import { Flex, Text, Avatar, Card, Box, Button } from '@radix-ui/themes';
 import { random20 } from './data';
+import { useNavigate } from 'react-router-dom';
+import { getRecipeIDFromURI } from '../utils/utils';
 
 export const Home = () => {
-	// const [randomRecipes, setRandomRecipes] = useState([]);
+	const navigate = useNavigate();
 
-	// useEffect(() => {
-	// 	const fetchRandomRecipes = async () => {
-	// 		try {
-	// 			const response = await axios.get('http://localhost:5001/recipes/random');
-	// 			const recipes = response.data.hits.map((recipe) => ({
-	// 				...recipe,
-	// 				isEdamam: true,
-	// 			}));
-	// 			console.log(recipes);
-	// 			setRandomRecipes(recipes);
-	// 		} catch (error) {
-	// 			console.error('Error fetching random recipes: ', error);
-	// 		}
-	// 	};
+	const handleRecipeClick = (recipeID) => {
+		navigate(`/recipe/${recipeID}`);
+	};
 
-	// 	fetchRandomRecipes();
-	// }, []);
+	const [randomRecipes, setRandomRecipes] = useState([]);
+
+	useEffect(() => {
+		const fetchRandomRecipes = async () => {
+			try {
+				const response = await axios.get('http://localhost:5001/recipes/random');
+				const recipes = response.data.hits.map((recipe) => {
+					const recipeID = getRecipeIDFromURI(recipe.recipe.uri);
+					return { ...recipe, isEdamam: true, recipeID: recipeID };
+				});
+
+				console.log(recipes);
+				setRandomRecipes(recipes);
+			} catch (error) {
+				console.error('Error fetching random recipes: ', error);
+			}
+		};
+
+		fetchRandomRecipes();
+	}, []);
 
 	return (
 		<div>
