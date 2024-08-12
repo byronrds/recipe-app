@@ -6,34 +6,49 @@ import { Flex, Text, Avatar, Card, Box, Button } from '@radix-ui/themes';
 import { random20 } from './data';
 import { useNavigate } from 'react-router-dom';
 import { getRecipeIDFromURI } from '../utils/utils';
+import { filterRecipeFields } from '../utils/utils';
 
 export const Home = () => {
 	const navigate = useNavigate();
 
-	const handleRecipeClick = (recipeID) => {
-		navigate(`/recipe/${recipeID}`);
+	const handleRecipeClick = (recipeID, filteredRecipes) => {
+		navigate(`/recipe/${recipeID}`, {
+			state: { recipe: filteredRecipes },
+		});
 	};
 
-	const [randomRecipes, setRandomRecipes] = useState([]);
+	// const randomWithID = random20.map((item) => {
+	// 	const recipeID = getRecipeIDFromURI(item.recipe.uri);
+	// 	return {
+	// 		...item,
+	// 		isEdamam: true,
+	// 		recipeID: recipeID,
+	// 	};
+	// });
 
-	useEffect(() => {
-		const fetchRandomRecipes = async () => {
-			try {
-				const response = await axios.get('http://localhost:5001/recipes/random');
-				const recipes = response.data.hits.map((recipe) => {
-					const recipeID = getRecipeIDFromURI(recipe.recipe.uri);
-					return { ...recipe, isEdamam: true, recipeID: recipeID };
-				});
+	const filteredRecipes = filterRecipeFields(random20);
+	console.log(filteredRecipes);
 
-				console.log(recipes);
-				setRandomRecipes(recipes);
-			} catch (error) {
-				console.error('Error fetching random recipes: ', error);
-			}
-		};
+	// const [randomRecipes, setRandomRecipes] = useState([]);
 
-		fetchRandomRecipes();
-	}, []);
+	// useEffect(() => {
+	// 	const fetchRandomRecipes = async () => {
+	// 		try {
+	// 			const response = await axios.get('http://localhost:5001/recipes/random');
+	// 			const recipes = response.data.hits.map((recipe) => {
+	// 				const recipeID = getRecipeIDFromURI(recipe.recipe.uri);
+	// 				return { ...recipe, isEdamam: true, recipeID: recipeID };
+	// 			});
+
+	// 			console.log(recipes);
+	// 			setRandomRecipes(recipes);
+	// 		} catch (error) {
+	// 			console.error('Error fetching random recipes: ', error);
+	// 		}
+	// 	};
+
+	// 	fetchRandomRecipes();
+	// }, []);
 
 	return (
 		<div>
@@ -43,18 +58,22 @@ export const Home = () => {
 			<p>Here are some random recipes fetched from their database. </p>
 			<br></br>
 			<div className={styles.flexbox}>
-				{random20.map((item, index) => (
-					<Box key={index} className={styles.clickbox} width='300px'>
+				{filteredRecipes.map((item, index) => (
+					<Box
+						onClick={() => handleRecipeClick(item.recipeID, item)}
+						key={index}
+						className={styles.clickbox}
+						width='300px'>
 						<Card>
 							<Flex gap='4' direction='column'>
 								<Text as='div' size='4' weight='bold'>
-									{item.recipe.label}
+									{item.label}
 								</Text>
 
-								<Avatar size='8' src={item.recipe.image} alt='Food pic' />
+								<Avatar size='8' src={item.image} alt='Food pic' />
 
 								<Text as='div' size='2' weight='bold'>
-									{item.recipe.source}
+									{item.source}
 								</Text>
 							</Flex>
 						</Card>

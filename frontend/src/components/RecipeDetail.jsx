@@ -1,24 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { doc, getDoc, addDoc, collection } from "firebase/firestore";
-import { db } from "../../firebase";
-import { Chatbot } from "./Chatbot";
-import { useLocation } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { doc, getDoc, addDoc, collection } from 'firebase/firestore';
+import { db } from '../../firebase';
+import { Chatbot } from './Chatbot';
+import { useLocation } from 'react-router-dom';
 
 export const RecipeDetail = () => {
-	const { recipeID } = useParams();
-	// const [recipe, setRecipe] = useState(null);
-	const [loading, setLoading] = useState(true);
-	console.log("hit");
-
-	const location = useLocation();
-	const recipe = location.state?.recipe;
-	console.log("should be here", recipe);
-
-	if (!recipe) {
-		return <p>No recipe found</p>;
-	}
-
 	// useEffect(() => {
 	// 	const fetchRecipe = async () => {
 	// 		try {
@@ -48,7 +35,7 @@ export const RecipeDetail = () => {
 	// 	return <p>No recipe found</p>;
 	// }
 
-	const user = localStorage.getItem("user");
+	const user = localStorage.getItem('user');
 	const jsonUser = JSON.parse(user);
 	const email = jsonUser.email;
 
@@ -67,21 +54,21 @@ export const RecipeDetail = () => {
 
 	const addUserRecipe = async () => {
 		try {
-			console.log("Da Object: ", userObjForFirestore);
+			console.log('Da Object: ', userObjForFirestore);
 			const docRef = await addDoc(collection(db, `${email}-recipes`), userObjForFirestore);
-			console.log("Document written with ID: ", docRef.id);
+			console.log('Document written with ID: ', docRef.id);
 		} catch (e) {
-			console.error("Error adding document: ", e);
+			console.error('Error adding document: ', e);
 		}
 	};
 
 	const addEdamamRecipe = async () => {
 		try {
-			console.log("Da Object: ", edamamObjForFirestore);
+			console.log('Da Object: ', edamamObjForFirestore);
 			const docRef = await addDoc(collection(db, `${email}-recipes`), edamamObjForFirestore);
-			console.log("Document written with ID: ", docRef.id);
+			console.log('Document written with ID: ', docRef.id);
 		} catch (e) {
-			console.error("Error adding document: ", e);
+			console.error('Error adding document: ', e);
 		}
 	};
 
@@ -95,7 +82,7 @@ export const RecipeDetail = () => {
 
 	return (
 		<div>
-			<div style={{ margin: "20px" }}>
+			<div style={{ margin: '20px' }}>
 				<div>
 					<h1>{recipe.label}</h1>
 					<h3>Ingredients:</h3>
