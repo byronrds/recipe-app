@@ -1,12 +1,8 @@
-# React + Vite
+# Recipe App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
+This is a simple React app which fetches recipes using the Edamam API. 
+Once you sign up for an account, you have the ability to save recipes, create recipes, 
+rate recipes, ask your sous-chef (OpenAI API) for more information on recipe. 
 
 # Tools
-- Using Radix for UI library
+- React (JavaScript), Express.js, OpenAI API, Firestore, Edamam API
