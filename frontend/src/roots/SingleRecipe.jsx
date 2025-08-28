@@ -5,7 +5,8 @@ import { Chatbot } from '../components/Chatbot';
 export const SingleRecipe = () => {
 	const { state } = useLocation();
 
-	const recipe = state?.recipe;
+	// Support both Edamam and user recipe structures
+	const recipe = state?.recipe?.recipe || state?.recipe;
 
 	if (!recipe) {
 		return <div>Recipe not found!</div>;
@@ -47,9 +48,11 @@ export const SingleRecipe = () => {
 					<h1>{recipe.label}</h1>
 					<h3>Ingredients:</h3>
 					<ul>
-						{recipe.ingredientLines.map((ingredient, index) => (
-							<li key={index}>{ingredient}</li>
-						))}
+						{Array.isArray(recipe.ingredientLines)
+							? recipe.ingredientLines.map((ingredient, index) => (
+								<li key={index}>{ingredient}</li>
+							))
+							: <li>No ingredients found.</li>}
 					</ul>
 					<img src={recipe.image} alt={recipe.label} />
 					<p>Calories: {recipe.calories}</p>
@@ -59,7 +62,7 @@ export const SingleRecipe = () => {
 					<button onClick={() => saveRecipe()}>Save</button>
 				</div>
 				<div>
-					<Chatbot ingredientLines={recipe.ingredientLines} />
+					<Chatbot ingredientLines={recipe.ingredientLines || []} />
 				</div>
 			</div>
 		</div>
