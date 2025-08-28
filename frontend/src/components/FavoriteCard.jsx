@@ -4,16 +4,30 @@ import { useLocation, Link, Routes, Route, useParams } from 'react-router-dom';
 import '../styles/App.css';
 
 export const FavoriteCard = ({ calories, id, image, ingredientLines, source, label, uri, isEdamam }) => {
-	const recipeData = {
-		calories,
-		id,
-		image,
-		ingredientLines,
-		source,
-		label,
-		uri,
-		isEdamam,
-	};
+	// For Edamam recipes, wrap in { recipe: ... } to match SingleRecipe expectations
+	const recipeData = isEdamam
+		? {
+			recipe: {
+				calories,
+				id,
+				image,
+				ingredientLines,
+				source,
+				label,
+				uri,
+				isEdamam,
+			},
+		}
+		: {
+			calories,
+			id,
+			image,
+			ingredientLines,
+			source,
+			label,
+			uri,
+			isEdamam,
+		};
 
 	return (
 		<div className='gimme-space'>
@@ -36,15 +50,9 @@ export const FavoriteCard = ({ calories, id, image, ingredientLines, source, lab
 								{source}
 							</Text>
 							<br></br>
-							{isEdamam ? (
-								<Link to={`/recipe/${id}`} state={{ recipe: recipeData }}>
-									<button>View</button>
-								</Link>
-							) : (
-								<Link to={`/recipe/${id}`}>
-									<button>View</button>
-								</Link>
-							)}
+							<Link to={`/recipe/${id}`} state={{ recipe: recipeData }}>
+								<button>View</button>
+							</Link>
 						</Box>
 
 						<img style={{ width: '200px' }} src={image} fallback='T' />
