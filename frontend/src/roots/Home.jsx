@@ -9,79 +9,83 @@ import { getRecipeIDFromURI } from '../utils/utils';
 import { filterRecipeFields } from '../utils/utils';
 
 export const Home = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    const handleRecipeClick = (recipeID, filteredRecipes) => {
-        navigate(`/recipe/${recipeID}`, {
-            state: { recipe: filteredRecipes },
+  const handleRecipeClick = (recipeID, filteredRecipes) => {
+    navigate(`/recipe/${recipeID}`, {
+      state: { recipe: filteredRecipes },
+    });
+  };
+
+  // const randomWithID = random20.map((item) => {
+  // 	const recipeID = getRecipeIDFromURI(item.recipe.uri);
+  // 	return {
+  // 		...item,
+  // 		isEdamam: true,
+  // 		recipeID: recipeID,
+  // 	};
+  // });
+
+  // const filteredRecipes = filterRecipeFields(random20);
+  // console.log(filteredRecipes);
+
+  const [randomRecipes, setRandomRecipes] = useState([]);
+
+  useEffect(() => {
+    const fetchRandomRecipes = async () => {
+      try {
+        const response = await axios.get('http://localhost:5001/recipes/random');
+        console.log('response: ', response.data);
+        const recipes = response.data.hits.map((recipe) => {
+          const recipeID = getRecipeIDFromURI(recipe.recipe.uri);
+          return { ...recipe, isEdamam: true, recipeID: recipeID };
         });
+
+        console.log('blblbll', recipes);
+        setRandomRecipes(recipes);
+      } catch (error) {
+        console.error('Error fetching random recipes: ', error);
+      }
     };
 
-    // const randomWithID = random20.map((item) => {
-    // 	const recipeID = getRecipeIDFromURI(item.recipe.uri);
-    // 	return {
-    // 		...item,
-    // 		isEdamam: true,
-    // 		recipeID: recipeID,
-    // 	};
-    // });
+    fetchRandomRecipes();
+  }, []);
 
-    // const filteredRecipes = filterRecipeFields(random20);
-    // console.log(filteredRecipes);
+  return (
+    <div>
+      <AriaNavbar />
+      <h1>What Shall You Cook Today?</h1>
+      <p>Shoutout Edamam API for their public database of recipes!</p>
+      <p>Here are some recipes fetched from their database... </p>
+      <br></br>
+      <div className={styles.flexbox}>
+        {randomRecipes.map((item, index) => {
+          // Edamam API structure: item.recipe contains the actual recipe fields
+          const recipe = item.recipe || item;
+          return (
+            <Box
+              onClick={() => handleRecipeClick(item.recipeID, item)}
+              key={index}
+              className={styles.clickbox}
+              width="300px"
+            >
+              <Card>
+                <Flex gap="4" direction="column">
+                  <Text as="div" size="4" weight="bold">
+                    {recipe.label}
+                  </Text>
 
-    const [randomRecipes, setRandomRecipes] = useState([]);
+                  <Avatar size="8" src={recipe.image} alt="Food pic" />
 
-    useEffect(() => {
-        const fetchRandomRecipes = async () => {
-            try {
-                const response = await axios.get('http://localhost:5001/recipes/random');
-                console.log('response: ', response.data);
-                const recipes = response.data.hits.map((recipe) => {
-                    const recipeID = getRecipeIDFromURI(recipe.recipe.uri);
-                    return { ...recipe, isEdamam: true, recipeID: recipeID };
-                });
-
-                console.log('blblbll', recipes);
-                setRandomRecipes(recipes);
-            } catch (error) {
-                console.error('Error fetching random recipes: ', error);
-            }
-        };
-
-        fetchRandomRecipes();
-    }, []);
-
-    return (
-        <div>
-            <AriaNavbar />
-            <h1>What Shall You Cook Today?</h1>
-            <p>Shoutout Edamam API for their public database of recipes!</p>
-            <p>Here are some recipes fetched from their database... </p>
-            <br></br>
-            <div className={styles.flexbox}>
-                {randomRecipes.map((item, index) => (
-                    <Box
-                        onClick={() => handleRecipeClick(item.id, item)}
-                        key={index}
-                        className={styles.clickbox}
-                        width='300px'
-                    >
-                        <Card>
-                            <Flex gap='4' direction='column'>
-                                <Text as='div' size='4' weight='bold'>
-                                    {item.label}
-                                </Text>
-
-                                <Avatar size='8' src={item.image} alt='Food pic' />
-
-                                <Text as='div' size='2' weight='bold'>
-                                    {item.source}
-                                </Text>
-                            </Flex>
-                        </Card>
-                    </Box>
-                ))}
-            </div>
-        </div>
-    );
+                  <Text as="div" size="2" weight="bold">
+                    {recipe.source}
+                  </Text>
+                </Flex>
+              </Card>
+            </Box>
+          );
+        })}
+      </div>
+    </div>
+  );
 };
