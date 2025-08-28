@@ -3,7 +3,6 @@ import { AriaNavbar } from '../components/AriaNavbar';
 import axios from 'axios';
 import styles from '../styles/styles.module.css';
 import { Flex, Text, Avatar, Card, Box, Button } from '@radix-ui/themes';
-import { random20 } from './data';
 import { useNavigate } from 'react-router-dom';
 import { getRecipeIDFromURI } from '../utils/utils';
 import { filterRecipeFields } from '../utils/utils';
@@ -17,38 +16,35 @@ export const Home = () => {
     });
   };
 
-  // const randomWithID = random20.map((item) => {
-  // 	const recipeID = getRecipeIDFromURI(item.recipe.uri);
-  // 	return {
-  // 		...item,
-  // 		isEdamam: true,
-  // 		recipeID: recipeID,
-  // 	};
-  // });
+  const [randomRecipes, setRandomRecipes] = useState(() => {
+    // Try to load from localStorage first
+    const cached = localStorage.getItem('cachedRandomRecipes');
+    return cached ? JSON.parse(cached) : [];
+  });
 
-  // const filteredRecipes = filterRecipeFields(random20);
-  // console.log(filteredRecipes);
+  const fetchRandomRecipes = async () => {
+    try {
+      const response = await axios.get('http://localhost:5001/recipes/random');
+      console.log('response: ', response.data);
+      const recipes = response.data.hits.map((recipe) => {
+        const recipeID = getRecipeIDFromURI(recipe.recipe.uri);
+        return { ...recipe, isEdamam: true, recipeID: recipeID };
+      });
 
-  const [randomRecipes, setRandomRecipes] = useState([]);
+      console.log('blblbll', recipes);
+      setRandomRecipes(recipes);
+      localStorage.setItem('cachedRandomRecipes', JSON.stringify(recipes));
+    } catch (error) {
+      console.error('Error fetching random recipes: ', error);
+    }
+  };
 
+  // Only fetch if not cached
   useEffect(() => {
-    const fetchRandomRecipes = async () => {
-      try {
-        const response = await axios.get('http://localhost:5001/recipes/random');
-        console.log('response: ', response.data);
-        const recipes = response.data.hits.map((recipe) => {
-          const recipeID = getRecipeIDFromURI(recipe.recipe.uri);
-          return { ...recipe, isEdamam: true, recipeID: recipeID };
-        });
-
-        console.log('blblbll', recipes);
-        setRandomRecipes(recipes);
-      } catch (error) {
-        console.error('Error fetching random recipes: ', error);
-      }
-    };
-
-    fetchRandomRecipes();
+    if (!randomRecipes || randomRecipes.length === 0) {
+      fetchRandomRecipes();
+    }
+    // eslint-disable-next-line
   }, []);
 
   return (
@@ -57,6 +53,9 @@ export const Home = () => {
       <h1>What Shall You Cook Today?</h1>
       <p>Shoutout Edamam API for their public database of recipes!</p>
       <p>Here are some recipes fetched from their database... </p>
+      <Button onClick={fetchRandomRecipes} style={{ marginBottom: '1rem' }}>
+        Fetch New Recipes
+      </Button>
       <br></br>
       <div className={styles.flexbox}>
         {randomRecipes.map((item, index) => {
