@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AriaNavbar } from './AriaNavbar';
 import { AuthContext } from './AuthContext';
 import { Navigate } from 'react-router-dom';
@@ -7,14 +8,15 @@ import { db } from '../../firebase';
 import { FavoriteCard } from './FavoriteCard';
 
 export const Account = () => {
-	const user = localStorage.getItem('user');
-	if (user === null) {
-		return <Navigate to='/login' replace />;
-	}
-	const userJson = JSON.parse(user);
-	const email = userJson.email;
+		const navigate = useNavigate();
+		const user = localStorage.getItem('user');
+		if (user === null) {
+			return <Navigate to='/login' replace />;
+		}
+		const userJson = JSON.parse(user);
+		const email = userJson.email;
 
-	const { logoutUser } = useContext(AuthContext);
+		const { logoutUser } = useContext(AuthContext);
 
 	const [savedUserRecipes, setSavedUserRecipes] = useState([]);
 	const [savedEdamamRecipes, setSavedEdamamRecipes] = useState([]);
@@ -117,7 +119,10 @@ export const Account = () => {
 			<p>Here is your information: </p>
 			<p>Email: {email}</p>
 			<div>
-				<button onClick={() => logoutUser()}>Logout</button>
+				<button onClick={() => {
+					logoutUser();
+					navigate('/login', { replace: true });
+				}}>Logout</button>
 			</div>
 			<div className='saved-recipes-container'>
 				<div className='single-container'>
